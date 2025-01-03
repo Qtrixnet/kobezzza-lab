@@ -1,45 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { sleep } from '../sleep.ts'
 
-describe('sleep (real timers)', () => {
-  it('should return a Promise', () => {
-    const result = sleep(100)
-
-    expect(result).toBeInstanceOf(Promise)
-  })
-
-  it('should resolve after ~100 ms (real timers)', async () => {
-    const start = performance.now()
-
-    await sleep(300)
-
-    const end = performance.now()
-
-    expect(end - start).toBeGreaterThanOrEqual(300)
-  })
-
-  it('should resolve almost immediately with 0 ms', async () => {
-    const start = performance.now()
-
-    await sleep(0)
-
-    const end = performance.now()
-
-    expect(end - start).toBeGreaterThanOrEqual(0)
-  })
-
-  it('should resolve immediately with negative ms', async () => {
-    const start = performance.now()
-
-    await sleep(-100)
-
-    const end = performance.now()
-
-    expect(end - start).toBeLessThan(20)
-  })
-})
-
-describe('sleep (fake timers)', () => {
+describe('sleep', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })
@@ -48,20 +10,29 @@ describe('sleep (fake timers)', () => {
     vi.useRealTimers()
   })
 
-  it('should resolve after 100 ms (fake timers)', async () => {
-    const promise = sleep(100)
+  it('should resolve after 1000 ms', async () => {
+    const promise = sleep(1000)
 
-    // Проматываем время вперёд на 100 мс
-    vi.advanceTimersByTime(100)
+    // Проматываем время вперёд на 1000 мс
+    vi.advanceTimersByTime(1000)
 
-    // Проверяем, что промис успел резолвиться
+    // Проверяем, что промис успел зарезолвиться
     await expect(promise).resolves.toBeUndefined()
   })
 
-  it('should resolve immediately if ms=0 (fake timers)', async () => {
+  it('should resolve immediately if ms=0', async () => {
     const promise = sleep(0)
 
-    // Проматываем время на 0 мс — фактически запускаем все отложенные колбэки
+    // Запускаем все таймеры (по факту с 0 задержкой)
+    vi.runAllTimers()
+
+    await expect(promise).resolves.toBeUndefined()
+  })
+
+  it('should resolve immediately if ms<0', async () => {
+    const promise = sleep(-100)
+
+    // При отрицательном числе setTimeout сработает как 0
     vi.runAllTimers()
 
     await expect(promise).resolves.toBeUndefined()

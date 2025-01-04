@@ -2,6 +2,7 @@ export const promiseAll = <T>(
   iterable: Iterable<T | Promise<T>>
 ): Promise<T[]> => {
   return new Promise<T[]>((resolve, reject) => {
+    // Превращаем итерируемый объект (Set, Map.values(), генератор и т.д.) в массив
     const itemsList = Array.from(iterable)
 
     // Если передан пустой массив (или пустой итерируемый объект),

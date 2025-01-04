@@ -10,7 +10,7 @@ describe('sleep', () => {
     vi.useRealTimers()
   })
 
-  it('should resolve after 1000 ms', async () => {
+  it('Должен зарезолвиться спустя 1000мс', async () => {
     const promise = sleep(1000)
 
     // Проматываем время вперёд на 1000 мс
@@ -20,7 +20,7 @@ describe('sleep', () => {
     await expect(promise).resolves.toBeUndefined()
   })
 
-  it('should resolve immediately if ms=0', async () => {
+  it('Должен зарезолвиться сразу после 0мс', async () => {
     const promise = sleep(0)
 
     // Запускаем все таймеры (по факту с 0 задержкой)
@@ -29,7 +29,7 @@ describe('sleep', () => {
     await expect(promise).resolves.toBeUndefined()
   })
 
-  it('should resolve immediately if ms<0', async () => {
+  it('Должен зарезолвиться сразу при отрицательном значении мс', async () => {
     const promise = sleep(-100)
 
     // При отрицательном числе setTimeout сработает как 0

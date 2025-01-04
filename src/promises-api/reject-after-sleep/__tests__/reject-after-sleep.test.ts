@@ -10,7 +10,7 @@ describe('rejectAfterSleep', () => {
     vi.useRealTimers()
   })
 
-  it('should reject after 300 ms', async () => {
+  it('Должен зареджектиться спустя 300мс', async () => {
     const promise = rejectAfterSleep(300)
 
     // Проматываем таймеры на 299 мс (промис ещё не должен упасть)
@@ -26,7 +26,7 @@ describe('rejectAfterSleep', () => {
     await expect(promise).rejects.toBeUndefined()
   })
 
-  it('should reject immediately if ms=0', async () => {
+  it('Должен зареджектиться сразу после 0мс', async () => {
     const promise = rejectAfterSleep(0)
 
     // Проматываем все таймеры (запланированный setTimeout(…, 0))
@@ -35,7 +35,7 @@ describe('rejectAfterSleep', () => {
     await expect(promise).rejects.toBeUndefined()
   })
 
-  it('should reject immediately if ms<0', async () => {
+  it('Должен зареджектиться сразу при отрицательном значении мс', async () => {
     const promise = rejectAfterSleep(-100)
 
     vi.runAllTimers()
